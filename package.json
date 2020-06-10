@@ -1,0 +1,23 @@
+{
+  "name": "zebra-print-server",
+  "version": "0.0.1",
+  "description": "Software for printing with Zebra printers using web link",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Metatavu Oy",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/node": "^14.0.12",
+    "@types/ws": "^7.2.5",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "ws": "^7.3.0"
+  }
+}
