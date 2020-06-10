@@ -78,6 +78,7 @@ class WebsocketApi {
       this.printers[channelId].friendlyName = data.toString("utf-8");
     });
     socket.on("close", () => {
+      console.log(`Raw channel with id: ${channelId} closed`)
       delete this.printers[channelId];
     });
     socket.send(Buffer.from('! U1 getvar "device.friendly_name" \r\n'));
