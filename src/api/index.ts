@@ -56,12 +56,14 @@ class Api {
       return res.status(400).send("Missing command");
     }
 
-    const found = websocketApi.sendCommand(printerId, command);
-    if (!found) {
+    websocketApi.sendCommand(printerId, command).then((found) => {
+      if (!found) {
+        return res.status(404).send("Printer not found"); 
+      }
+      res.status(204).send();
+    }).catch((e) => {
       return res.status(404).send("Printer not found");
-    }
-
-    res.status(204).send();
+    });
   }
 }
 
