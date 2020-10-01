@@ -94,6 +94,7 @@ class WebsocketApi {
       if (this.printers[channelId].deleteTimer) {
         clearTimeout(this.printers[channelId].deleteTimer);
       }
+      this.printers[channelId].socket = socket;
       this.printers[channelId].connected = true;
     } else {
       this.printers[channelId] = { socket: socket, id: channelId, friendlyName: "fetching from printer...", connected: true, deleteTimer: undefined };
