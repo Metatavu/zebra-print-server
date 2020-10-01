@@ -90,27 +90,28 @@ class WebsocketApi {
 
   private handleRawChannelOpened(channelId: string, socket: WebSocket) {
     console.log(`Raw channel opened with id: ${channelId}`);
+    socket.on("close", () => {
+      if (this.printers[channelId])  {
+        this.printers[channelId].connected = false;
+        console.log(`Raw channel with id: ${channelId} closed`);
+        this.printers[channelId].deleteTimer = setTimeout(() => {
+          delete this.printers[channelId];
+          console.log(`Printer with id ${channelId} deleted`);
+        }, PRINTER_REMOVAL_TIMEOUT);
+      }
+    });
     if (this.printers[channelId])  {
+      console.log("Printer already connected, updating socket");
       if (this.printers[channelId].deleteTimer) {
         clearTimeout(this.printers[channelId].deleteTimer);
       }
       this.printers[channelId].socket = socket;
       this.printers[channelId].connected = true;
     } else {
+      console.log("New printer added");
       this.printers[channelId] = { socket: socket, id: channelId, friendlyName: "fetching from printer...", connected: true, deleteTimer: undefined };
       socket.once("message", (data) => {
         this.printers[channelId].friendlyName = data.toString("utf-8");
-      });
-      socket.on("close", () => {
-        if (this.printers[channelId])  {
-          this.printers[channelId].connected = false;
-          console.log(`Raw channel with id: ${channelId} closed`);
-          this.printers[channelId].deleteTimer = setTimeout(() => {
-            delete this.printers[channelId];
-            console.log(`Printer with id ${channelId} deleted`);
-          }, PRINTER_REMOVAL_TIMEOUT);
-        }
-
       });
       socket.send(Buffer.from('! U1 getvar "device.friendly_name" \r\n'));
     }
